@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+    tools {
+        maven "maven"
+    }
+
+    stages {
+        stage('CHECKOUT') {
+            steps {
+                git branch: 'main', changelog: false, poll: false, url: 'https://github.com/Chandhinikesavan30/webappdemo.git'
+            }
+
+        }
+        stage('COMPILE') {
+            steps {
+                sh 'mvn -f demo1/pom.xml clean compile'
+            }
+
+        }
+        stage('BUILD') {
+            steps {
+                sh 'mvn -f demo1/pom.xml install'
+            }
+
+        }
+        stage('TEST') {
+            steps {
+                sh 'mvn -f demo1/pom.xml test'
+            }
+
+        }
+       
+        stage('DEPLOY') {
+            steps {
+                sh 'cp //var//lib//jenkins//workspace//pipelinedemo//demo1//target//demo1.war //opt//apache-tomcat-9.0.89//webapps'
+            }
+
+        }
+    }
+}
